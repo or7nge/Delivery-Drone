@@ -28,13 +28,13 @@ class ArukoProcessor:
         if not self.average_aruko:
             return Directive("NO ARUKO")
 
-        distance = self.average_aruko.get_distance()
+        distance = self.average_aruko.get_pixel_distance()
         drone_rotation = self.average_aruko.get_drone_rotation()
         front_rotation = self.average_aruko.get_front_rotation()
-        size = self.average_aruko.get_size()
+        aruco_pixel_width = self.average_aruko.get_aruco_pixel_width()
 
         if distance < DISTANCE_THRESHOLD:
-            if size > FRAME_HEIGHT // 3 and abs(front_rotation) > FRONT_ROTATION_THRESHOLD:
+            if aruco_pixel_width > FRAME_HEIGHT // 3 and abs(front_rotation) > FRONT_ROTATION_THRESHOLD:
                 return Directive("ROTATE", int(front_rotation))
             return Directive("DESCEND")
         if abs(drone_rotation) > DRONE_ROTATION_THRESHOLD:
@@ -43,7 +43,12 @@ class ArukoProcessor:
 
     def find_average_aruko(self):
         self.average_aruko = None
-        aruko_queue_cleared = [aruko.corners for aruko in self.aruko_queue if aruko]
+        aruko_queue_cleared = []
+        weights = []
+        for i in range(len(self.aruko_queue)):
+            if self.aruko_queue[i]:
+                aruko_queue_cleared.append(self.aruko_queue[i].corners)
+                weights.append(i + 1)
         if not aruko_queue_cleared:
             return
-        self.average_aruko = DetectedAruko(np.mean(aruko_queue_cleared, axis=0))
+        self.average_aruko = DetectedAruko(np.average(aruko_queue_cleared, axis=0, weights=weights))
