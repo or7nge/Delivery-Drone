@@ -39,7 +39,7 @@ class ArukoProcessor:
             return Directive("DESCEND")
         if abs(drone_rotation) > DRONE_ROTATION_THRESHOLD:
             return Directive("ROTATE", int(drone_rotation))
-        return Directive("MOVE", int(distance))
+        return Directive("MOVE", int(self.average_aruko.get_real_distance()))
 
     def find_average_aruko(self):
         self.average_aruko = None
