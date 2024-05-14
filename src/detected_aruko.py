@@ -14,10 +14,13 @@ class DetectedAruko:
     def get_center(self):
         return tuple(map(int, np.mean(self.corners, axis=0)))
 
-    def get_distance(self):
+    def get_pixel_distance(self):
         center = self.get_center()
         distance = np.linalg.norm(center - self.drone_center)
         return distance
+
+    def get_real_distance(self):
+        return self.get_pixel_distance() / self.get_aruco_pixel_width() * REAL_ARUKO_WIDTH
 
     def get_drone_rotation(self):
         center = self.get_center()
@@ -26,14 +29,16 @@ class DetectedAruko:
         return angle
 
     def get_front_rotation(self):
-        angle = np.arctan2(self.corners[1][1] - self.corners[0][1], self.corners[1][0] - self.corners[0][0])
+        angle = np.arctan2(self.topRight[1] - self.topLeft[1], self.topRight[0] - self.topLeft[0])
         angle = np.degrees(angle)
         return angle
 
-    def get_size(self):
-        return np.linalg.norm(self.corners[0] - self.corners[1])
+    def get_aruco_pixel_width(self):
+        return np.linalg.norm(self.topLeft - self.topRight)
 
-    def get_height(self):
-        real_width = REAL_ARUKO_WIDTH * FRAME_WIDTH / self.get_size()
-        height = (real_width / 2) / np.tan(np.radians(CAMERA_ANGLE / 2))
-        return height
+    def get_frame_real_width(self):
+        return FRAME_WIDTH * REAL_ARUKO_WIDTH / self.get_pixel_size()
+
+    def get_real_height(self):
+        real_width = self.get_real_width()
+        return (real_width / 2) / np.tan(np.radians(CAMERA_ANGLE / 2))
