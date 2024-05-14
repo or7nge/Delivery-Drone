@@ -26,7 +26,7 @@ class FrameExtended(np.ndarray):
 
             cv2.putText(self, f"DRONE ROTATION: {round(aruko.get_drone_rotation(), 2)}",
                         (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
-            cv2.putText(self, f"DRONE HEIGHT: {round(aruko.get_height(), 2)}",
+            cv2.putText(self, f"DRONE HEIGHT: {round(aruko.get_real_height(), 2)}",
                         (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
 
         # atcion info
