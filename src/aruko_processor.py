@@ -34,7 +34,7 @@ class ArukoProcessor:
         size = self.average_aruko.get_size()
 
         if distance < DISTANCE_THRESHOLD:
-            if size > SIZE_THRESHOLD and abs(front_rotation) > FRONT_ROTATION_THRESHOLD:
+            if size > FRAME_HEIGHT // 3 and abs(front_rotation) > FRONT_ROTATION_THRESHOLD:
                 return Directive("ROTATE", int(front_rotation))
             return Directive("DESCEND")
         if abs(drone_rotation) > DRONE_ROTATION_THRESHOLD:

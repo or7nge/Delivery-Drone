@@ -9,8 +9,8 @@ class Camera:
         self.aruko_processor = ArukoProcessor()
 
     def cut_frame(self, frame):
+        global FRAME_HEIGHT, FRAME_WIDTH
         FRAME_HEIGHT = FRAME_WIDTH = min(frame.shape[:2])
-        SIZE_THRESHOLD = FRAME_HEIGHT // 3
         height, width, _ = frame.shape
         min_dim = min(height, width)
         start_x = (width - min_dim) // 2
@@ -22,9 +22,7 @@ class Camera:
         while True:
             ret, frame = self.video.read()
             frame = self.cut_frame(frame)
-            cv2.imshow("Image", frame)
             if ret is False:
-                print("Error reading frame")
                 break
 
             extended_frame = self.aruko_processor.add_frame(frame)
@@ -32,7 +30,6 @@ class Camera:
 
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
-                print("Quitting")
                 break
 
         cv2.destroyAllWindows()
