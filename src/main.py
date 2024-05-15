@@ -10,4 +10,5 @@ if __name__ == '__main__':
     camera_thread.start()
     # controller_thread.start()
     camera_thread.join()
+    camera_thread.kill()
     # controller_thread.join()
