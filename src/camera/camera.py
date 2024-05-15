@@ -20,6 +20,9 @@ class Camera:
         return frame
 
     def camera_loop(self):
+        # Define the codec and create VideoWriter object
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (480, 480))
         while True:
             ret, frame = self.video.read()
             frame = self.cut_frame(frame)
@@ -27,6 +30,10 @@ class Camera:
                 break
 
             extended_frame = self.aruko_processor.add_frame(frame)
+
+            # Write the extended_frame to the video file
+            out.write(extended_frame)
+
             cv2.imshow("Image", extended_frame)
 
             key = cv2.waitKey(1) & 0xFF
