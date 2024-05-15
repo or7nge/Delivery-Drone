@@ -1,12 +1,13 @@
 from config import *
 import cv2
-from aruko_processor import ArukoProcessor
+from .aruko_processor import ArukoProcessor
 
 
 class Camera:
-    def __init__(self):
+    def __init__(self, queue):
+        self.queue = queue
         self.video = cv2.VideoCapture(0)
-        self.aruko_processor = ArukoProcessor()
+        self.aruko_processor = ArukoProcessor(self.queue)
 
     def cut_frame(self, frame):
         global FRAME_HEIGHT, FRAME_WIDTH
@@ -34,3 +35,8 @@ class Camera:
 
         cv2.destroyAllWindows()
         self.video.release()
+
+
+def start_camera_loop(queue):
+    camera = Camera(queue)
+    camera.camera_loop()

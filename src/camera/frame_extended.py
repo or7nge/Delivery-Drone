@@ -1,7 +1,7 @@
 from config import *
 import numpy as np
 import cv2
-from directive import Directive
+from .directive import Directive
 
 
 class FrameExtended(np.ndarray):

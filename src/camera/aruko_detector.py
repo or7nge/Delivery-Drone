@@ -1,6 +1,6 @@
 from config import *
 import cv2
-from detected_aruko import DetectedAruko
+from .detected_aruko import DetectedAruko
 
 
 class OrangeArucoDetector(cv2.aruco.ArucoDetector):

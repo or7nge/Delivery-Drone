@@ -1,13 +1,14 @@
 from config import *
 import numpy as np
-from frame_extended import FrameExtended
-from aruko_detector import OrangeArucoDetector
-from detected_aruko import DetectedAruko
-from directive import Directive
+from .frame_extended import FrameExtended
+from .aruko_detector import OrangeArucoDetector
+from .detected_aruko import DetectedAruko
+from .directive import Directive
 
 
 class ArukoProcessor:
-    def __init__(self):
+    def __init__(self, queue):
+        self.queue = queue
         self.aruko_detector = OrangeArucoDetector()
         self.aruko_queue = []
 
@@ -15,7 +16,9 @@ class ArukoProcessor:
         frame = FrameExtended(frame)
         aruko = self.aruko_detector.detectMarker(frame)
         self.add_aruko(aruko)
-        frame.show_info(self.average_aruko, self.get_directive())
+        current_directive = self.get_directive()
+        self.queue.put(current_directive)
+        frame.show_info(self.average_aruko, current_directive)
         return frame
 
     def add_aruko(self, aruko):
